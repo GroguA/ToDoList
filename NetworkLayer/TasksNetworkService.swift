@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ITasksNetworkService {
-    func getDefaultPoints(completion: @escaping (Result<[TaskScheme], Error>) -> Void)
+    func getDefaultTasks(completion: @escaping (Result<[TaskScheme], Error>) -> Void)
 }
 
 final class TasksNetworkService {
@@ -18,12 +18,12 @@ final class TasksNetworkService {
 }
 
 extension TasksNetworkService: ITasksNetworkService {
-    func getDefaultPoints(completion: @escaping (Result<[TaskScheme], Error>) -> Void) {
-        guard let request = makeURLRequest(endpoint: "https://dummyjson.com/todos") else {
+    func getDefaultTasks(completion: @escaping (Result<[TaskScheme], Error>) -> Void) {
+        guard let request = makeURLRequest("https://dummyjson.com/todos") else {
             completion(.failure(NetworkErrors.invalidRequest))
             return
         }
-        fetchPoints(with: request, completion: completion)
+        fetchTasks(with: request, completion: completion)
     }
 }
 
@@ -51,7 +51,7 @@ private extension TasksNetworkService {
         task.resume()
     }
     
-    func fetchPoints(with request: URLRequest, completion: @escaping (Result<[TaskScheme], Error>) -> Void) {
+    func fetchTasks(with request: URLRequest, completion: @escaping (Result<[TaskScheme], Error>) -> Void) {
         fetchData(with: request, responseType: TaskResponceScheme.self) { result in
             switch result {
             case .success(let model):
@@ -62,10 +62,8 @@ private extension TasksNetworkService {
         }
     }
     
-    func makeURLRequest(endpoint: String) -> URLRequest? {
-        var urlComponents = URLComponents(string: endpoint)
-        
-        guard let url = urlComponents?.url else {
+    func makeURLRequest(_ query: String) -> URLRequest? {
+        guard let url = URL(string: query) else {
             return nil
         }
         return URLRequest(url: url)
