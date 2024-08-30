@@ -14,6 +14,19 @@
 		7CE854932C808E76007B3FC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CE854922C808E76007B3FC0 /* Assets.xcassets */; };
 		7CE854962C808E76007B3FC0 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 7CE854952C808E76007B3FC0 /* Base */; };
 		7CE8549E2C809003007B3FC0 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 7CE8549D2C809003007B3FC0 /* .gitignore */; };
+		7CE854A62C8092BC007B3FC0 /* ToDoListContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE854A52C8092BC007B3FC0 /* ToDoListContainerView.swift */; };
+		7CE854A82C809486007B3FC0 /* ToDoListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE854A72C809485007B3FC0 /* ToDoListCollectionViewCell.swift */; };
+		7CE854AC2C8094B8007B3FC0 /* LabelsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE854AB2C8094B8007B3FC0 /* LabelsFactory.swift */; };
+		7CE854AE2C809628007B3FC0 /* TaskModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE854AD2C809628007B3FC0 /* TaskModel.swift */; };
+		7CE854B02C809732007B3FC0 /* ToDoListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE854AF2C809732007B3FC0 /* ToDoListPresenter.swift */; };
+		7CE854B32C809791007B3FC0 /* ToDoListCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE854B22C809791007B3FC0 /* ToDoListCollectionViewDataSource.swift */; };
+		7CE854B52C8099E3007B3FC0 /* ToDoListInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE854B42C8099E3007B3FC0 /* ToDoListInteractor.swift */; };
+		7CE854B82C809AD7007B3FC0 /* JsonDecoderWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE854B72C809AD7007B3FC0 /* JsonDecoderWrapper.swift */; };
+		7CE854BA2C809B23007B3FC0 /* TasksNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE854B92C809B23007B3FC0 /* TasksNetworkService.swift */; };
+		7CE854BD2C809BA2007B3FC0 /* NetworkErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE854BC2C809BA2007B3FC0 /* NetworkErrors.swift */; };
+		7CE854BF2C809D10007B3FC0 /* TaskScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE854BE2C809D10007B3FC0 /* TaskScheme.swift */; };
+		7CE854C52C80A521007B3FC0 /* ToDoListAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE854C42C80A521007B3FC0 /* ToDoListAssembly.swift */; };
+		7CE854C72C80A59E007B3FC0 /* ToDoListRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE854C62C80A59E007B3FC0 /* ToDoListRouter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +39,19 @@
 		7CE854952C808E76007B3FC0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7CE854972C808E76007B3FC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7CE8549D2C809003007B3FC0 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		7CE854A52C8092BC007B3FC0 /* ToDoListContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListContainerView.swift; sourceTree = "<group>"; };
+		7CE854A72C809485007B3FC0 /* ToDoListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListCollectionViewCell.swift; sourceTree = "<group>"; };
+		7CE854AB2C8094B8007B3FC0 /* LabelsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelsFactory.swift; sourceTree = "<group>"; };
+		7CE854AD2C809628007B3FC0 /* TaskModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskModel.swift; sourceTree = "<group>"; };
+		7CE854AF2C809732007B3FC0 /* ToDoListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListPresenter.swift; sourceTree = "<group>"; };
+		7CE854B22C809791007B3FC0 /* ToDoListCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListCollectionViewDataSource.swift; sourceTree = "<group>"; };
+		7CE854B42C8099E3007B3FC0 /* ToDoListInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListInteractor.swift; sourceTree = "<group>"; };
+		7CE854B72C809AD7007B3FC0 /* JsonDecoderWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDecoderWrapper.swift; sourceTree = "<group>"; };
+		7CE854B92C809B23007B3FC0 /* TasksNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksNetworkService.swift; sourceTree = "<group>"; };
+		7CE854BC2C809BA2007B3FC0 /* NetworkErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkErrors.swift; sourceTree = "<group>"; };
+		7CE854BE2C809D10007B3FC0 /* TaskScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskScheme.swift; sourceTree = "<group>"; };
+		7CE854C42C80A521007B3FC0 /* ToDoListAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListAssembly.swift; sourceTree = "<group>"; };
+		7CE854C62C80A59E007B3FC0 /* ToDoListRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListRouter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,8 +68,11 @@
 		7CE8547A2C808E6F007B3FC0 = {
 			isa = PBXGroup;
 			children = (
+				7CE854B62C809AB0007B3FC0 /* NetworkLayer */,
+				7CE854A92C8094A3007B3FC0 /* Factories */,
 				7CE8549D2C809003007B3FC0 /* .gitignore */,
 				7CE854852C808E6F007B3FC0 /* ToDoList */,
+				7CE8549F2C809245007B3FC0 /* ToDoListMainScreen */,
 				7CE854842C808E6F007B3FC0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,13 +90,103 @@
 			children = (
 				7CE854862C808E6F007B3FC0 /* AppDelegate.swift */,
 				7CE854882C808E6F007B3FC0 /* SceneDelegate.swift */,
-				7CE8548A2C808E6F007B3FC0 /* ToDoListViewController.swift */,
 				7CE854922C808E76007B3FC0 /* Assets.xcassets */,
 				7CE854942C808E76007B3FC0 /* LaunchScreen.storyboard */,
 				7CE854972C808E76007B3FC0 /* Info.plist */,
 				7CE8548F2C808E6F007B3FC0 /* ToDoList.xcdatamodeld */,
 			);
 			path = ToDoList;
+			sourceTree = "<group>";
+		};
+		7CE8549F2C809245007B3FC0 /* ToDoListMainScreen */ = {
+			isa = PBXGroup;
+			children = (
+				7CE854C32C80A514007B3FC0 /* Assembly */,
+				7CE854B12C80977E007B3FC0 /* CollectionViewDataSource */,
+				7CE854A42C8092A3007B3FC0 /* Router */,
+				7CE854A32C80929E007B3FC0 /* Entity */,
+				7CE854A22C809290007B3FC0 /* Interactor */,
+				7CE854A12C80928C007B3FC0 /* Presenter */,
+				7CE854A02C809286007B3FC0 /* View */,
+			);
+			path = ToDoListMainScreen;
+			sourceTree = "<group>";
+		};
+		7CE854A02C809286007B3FC0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7CE8548A2C808E6F007B3FC0 /* ToDoListViewController.swift */,
+				7CE854A52C8092BC007B3FC0 /* ToDoListContainerView.swift */,
+				7CE854A72C809485007B3FC0 /* ToDoListCollectionViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		7CE854A12C80928C007B3FC0 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				7CE854AF2C809732007B3FC0 /* ToDoListPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		7CE854A22C809290007B3FC0 /* Interactor */ = {
+			isa = PBXGroup;
+			children = (
+				7CE854B42C8099E3007B3FC0 /* ToDoListInteractor.swift */,
+			);
+			path = Interactor;
+			sourceTree = "<group>";
+		};
+		7CE854A32C80929E007B3FC0 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				7CE854AD2C809628007B3FC0 /* TaskModel.swift */,
+				7CE854BE2C809D10007B3FC0 /* TaskScheme.swift */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
+		7CE854A42C8092A3007B3FC0 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				7CE854C62C80A59E007B3FC0 /* ToDoListRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		7CE854A92C8094A3007B3FC0 /* Factories */ = {
+			isa = PBXGroup;
+			children = (
+				7CE854AB2C8094B8007B3FC0 /* LabelsFactory.swift */,
+			);
+			path = Factories;
+			sourceTree = "<group>";
+		};
+		7CE854B12C80977E007B3FC0 /* CollectionViewDataSource */ = {
+			isa = PBXGroup;
+			children = (
+				7CE854B22C809791007B3FC0 /* ToDoListCollectionViewDataSource.swift */,
+			);
+			path = CollectionViewDataSource;
+			sourceTree = "<group>";
+		};
+		7CE854B62C809AB0007B3FC0 /* NetworkLayer */ = {
+			isa = PBXGroup;
+			children = (
+				7CE854B72C809AD7007B3FC0 /* JsonDecoderWrapper.swift */,
+				7CE854B92C809B23007B3FC0 /* TasksNetworkService.swift */,
+				7CE854BC2C809BA2007B3FC0 /* NetworkErrors.swift */,
+			);
+			path = NetworkLayer;
+			sourceTree = "<group>";
+		};
+		7CE854C32C80A514007B3FC0 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				7CE854C42C80A521007B3FC0 /* ToDoListAssembly.swift */,
+			);
+			path = Assembly;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,9 +260,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CE854AE2C809628007B3FC0 /* TaskModel.swift in Sources */,
+				7CE854C72C80A59E007B3FC0 /* ToDoListRouter.swift in Sources */,
+				7CE854B32C809791007B3FC0 /* ToDoListCollectionViewDataSource.swift in Sources */,
 				7CE8548B2C808E6F007B3FC0 /* ToDoListViewController.swift in Sources */,
+				7CE854C52C80A521007B3FC0 /* ToDoListAssembly.swift in Sources */,
+				7CE854BF2C809D10007B3FC0 /* TaskScheme.swift in Sources */,
+				7CE854BD2C809BA2007B3FC0 /* NetworkErrors.swift in Sources */,
+				7CE854A62C8092BC007B3FC0 /* ToDoListContainerView.swift in Sources */,
+				7CE854A82C809486007B3FC0 /* ToDoListCollectionViewCell.swift in Sources */,
 				7CE854872C808E6F007B3FC0 /* AppDelegate.swift in Sources */,
 				7CE854892C808E6F007B3FC0 /* SceneDelegate.swift in Sources */,
+				7CE854B02C809732007B3FC0 /* ToDoListPresenter.swift in Sources */,
+				7CE854B82C809AD7007B3FC0 /* JsonDecoderWrapper.swift in Sources */,
+				7CE854AC2C8094B8007B3FC0 /* LabelsFactory.swift in Sources */,
+				7CE854BA2C809B23007B3FC0 /* TasksNetworkService.swift in Sources */,
+				7CE854B52C8099E3007B3FC0 /* ToDoListInteractor.swift in Sources */,
 				7CE854912C808E6F007B3FC0 /* ToDoList.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
