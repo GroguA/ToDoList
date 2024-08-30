@@ -9,7 +9,6 @@ import UIKit
 
 protocol IToDoListController: AnyObject {
     func showTasks(_ tasks: [TaskModel])
-    //    func deleteTask(at index: Int)
 }
 
 final class ToDoListViewController: UIViewController {
