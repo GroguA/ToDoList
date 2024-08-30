@@ -25,25 +25,14 @@ final class ToDoListContainerView: UIView {
                 let deleteAction = UIContextualAction(style: .destructive, title: "Delete") {
                     [weak self] action, view, completion in
                     guard let self else { return }
-                    self.deleteActionClosure(self.dataSource.tasks[indexPath.row].id)
+                    self.dataSource.tasks.remove(at: indexPath.row)
+                    deleteActionClosure?(indexPath)
                     completion(true)
                 }
                 return UISwipeActionsConfiguration(actions: [deleteAction])
             }
 
-            config.leadingSwipeActionsConfigurationProvider = { indexPath in
-                let completeAction = UIContextualAction(style: .normal, title: "Done") {
-                    [weak self] action, view, completion in
-                    guard let self else { return }
-                    self.completeActionClosure(self.dataSource.tasks[indexPath.row].id)
-                    completion(true)
-                }
-                completeAction.backgroundColor = .systemGreen
-                return UISwipeActionsConfiguration(actions: [completeAction])
-            }
-
             let layoutSection = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
-            layoutSection.interGroupSpacing = 8
             return layoutSection
         }
         return layout
@@ -52,7 +41,7 @@ final class ToDoListContainerView: UIView {
     
     lazy var addTaskButton: UIImageView = {
         let button = UIImageView()
-        button.image = UIImage(systemName: "plus.circle.fill")
+        button.image = UIImage(systemName: "plus")
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isUserInteractionEnabled = true
         return button
@@ -60,8 +49,7 @@ final class ToDoListContainerView: UIView {
     
     let dataSource = ToDoListMainCollectionViewDataSource()
     
-    var deleteActionClosure: ((Int) -> Void) = { _ in }
-    var completeActionClosure: ((Int) -> Void) = { _ in }
+    var deleteActionClosure: ((IndexPath) -> Void)?
     
     init(delegate: UICollectionViewDelegate) {
         super.init(frame: .zero)

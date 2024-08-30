@@ -9,6 +9,7 @@ import Foundation
 
 protocol IToDoListPresenter {
     func didLoad(ui: IToDoListController)
+    func taskDeleted(_ index: Int)
 }
 
 final class ToDoListPresenter {
@@ -36,6 +37,10 @@ extension ToDoListPresenter: IToDoListPresenter {
                 
             }
         }
+    }
+    
+    func taskDeleted(_ index: Int) {
+        interactor.deleteTask(index)
     }
 }
 

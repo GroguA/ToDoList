@@ -9,6 +9,7 @@ import Foundation
 
 protocol IToDoListInteractor {
     func fetchPoints(completion: @escaping (Result<[TaskModel], Error>) -> Void)
+    func deleteTask(_ index: Int)
 }
 
 final class ToDoListInteractor {
@@ -30,6 +31,11 @@ extension ToDoListInteractor: IToDoListInteractor {
             }
         }
     }
+    
+    func deleteTask(_ index: Int) {
+        currentTasks.remove(at: index)
+    }
+ 
 }
 
 private extension ToDoListInteractor {
