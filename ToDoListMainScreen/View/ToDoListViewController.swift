@@ -9,7 +9,7 @@ import UIKit
 
 protocol IToDoListController: AnyObject {
     func showTasks(_ tasks: [TaskModel])
-//    func deleteTask(at index: Int)
+    //    func deleteTask(at index: Int)
 }
 
 final class ToDoListViewController: UIViewController {
@@ -52,24 +52,7 @@ extension ToDoListViewController: IToDoListController {
             self?.containerView.taskCollectionView.reloadData()
         }
     }
-    
-//    func deleteTask(at indexPath: Int) {
-//        callResultOnMain { [weak self] in
-//                guard let self = self else { return }
-//
-//                // Анимация удаления ячейки с обновлением layout
-//                self.containerView.taskCollectionView.performBatchUpdates({
-//                    self.containerView.taskCollectionView.deleteItems(at: [indexPath])
-//                }, completion: { finished in
-//                    // Завершаем анимацию: проверка на пустой список или другие действия
-//                    if self.containerView.dataSource.tasks.isEmpty {
-//                        self.containerView.taskCollectionView.isHidden = true
-//                    }
-//                })
-//            }
-    }
-
-    
+}
 
 extension ToDoListViewController: UICollectionViewDelegate {
     
