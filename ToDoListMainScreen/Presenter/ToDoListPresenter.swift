@@ -73,7 +73,14 @@ extension ToDoListPresenter: IToDoListPresenter {
 
     
     func taskClicked(at index: Int) {
-        router.showEditTaskScreen(tasks[index].id)
+        interactor.taskClicked { userTaskCreated in
+            if userTaskCreated {
+                router.showEditTaskScreen(tasks[index].id)
+            } else {
+                self.createTaskClicked()
+            }
+        }
+        
     }
     
     func createTaskClicked() {

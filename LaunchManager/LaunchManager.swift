@@ -12,16 +12,18 @@ final class LaunchManager {
     
     private let hasLaunchedKey = "hasLaunchedBefore"
     
+    private let defaults = UserDefaults.standard
+    
     private init() {}
 
     func isFirstLaunch() -> Bool {
-        let defaults = UserDefaults.standard
-        if !defaults.bool(forKey: hasLaunchedKey) {
-            defaults.set(true, forKey: hasLaunchedKey)
-            defaults.synchronize()
-            return true
-        } else {
+        if defaults.bool(forKey: hasLaunchedKey) {
             return false
+        } else {
+            defaults.set(true, forKey: hasLaunchedKey)
+//            defaults.synchronize()  // Синхронизация не обязательна в современных версиях iOS
+            return true
         }
     }
+
 }
