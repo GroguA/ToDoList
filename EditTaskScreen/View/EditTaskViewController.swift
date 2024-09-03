@@ -83,6 +83,8 @@ extension EditTaskViewController: UITextViewDelegate {
 extension EditTaskViewController: IEditTaskViewController {
     func showTask(_ task: EditTaskModel) {
         containerView.taskTitleTextField.text = task.title
+        containerView.taskTextTextView.isHidden = false
+        containerView.taskTitleTextField.isHidden = false
         if let text = task.text, !text.isEmpty {
             containerView.placeholderLabel.isHidden = true
             containerView.taskTextTextView.text = text
@@ -90,7 +92,11 @@ extension EditTaskViewController: IEditTaskViewController {
     }
     
     func showError(_ error: String) {
-        //later
+        containerView.taskTextTextView.isHidden = true
+        containerView.taskTitleTextField.isHidden = true
+        containerView.placeholderLabel.isHidden = true
+        containerView.errorAlert.message = error
+        present(containerView.errorAlert, animated: true)
     }
     
 }

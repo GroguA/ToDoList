@@ -17,6 +17,7 @@ final class EditTaskContainerView: UIView {
         textField.autocapitalizationType = .none
         textField.autocorrectionType = .no
         textField.textAlignment = .justified
+        textField.becomeFirstResponder()
         textField.font = .systemFont(ofSize: 19, weight: .semibold)
         return textField
     }()
@@ -39,6 +40,12 @@ final class EditTaskContainerView: UIView {
         let label = LabelsFactory.createLabel(with: "Describe task")
         label.textColor = .lightGray.withAlphaComponent(0.7)
         return label
+    }()
+    
+    lazy var errorAlert: UIAlertController = {
+        let alert = UIAlertController(title: "Error", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default))
+        return alert
     }()
     
     private let offsetForConstraints: CGFloat = 16
