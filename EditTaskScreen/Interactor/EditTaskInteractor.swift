@@ -13,11 +13,11 @@ protocol IEditTaskInteractor {
 }
 
 final class EditTaskInteractor {
-    private let storageService = TaskStorageService.shared
-    
+    private let storageService: ITaskStorageService
     private let taskId: String
     
-    init(taskId: String) {
+    init(taskId: String, storageService: ITaskStorageService) {
+        self.storageService = storageService
         self.taskId = taskId
     }
 }
@@ -44,7 +44,7 @@ extension EditTaskInteractor: IEditTaskInteractor {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard let self else { return }
                 do {
-                    try self.storageService.updateTaskById(self.taskId, title: title, text: text)
+                    try self.storageService.updateTaskById(self.taskId, title: title, text: text, status: nil)
                 } catch {
                     self.callCompletionOnMain(.failure(error), completion: completion)
                 }
