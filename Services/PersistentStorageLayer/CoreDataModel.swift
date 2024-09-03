@@ -11,6 +11,6 @@ struct TaskStorageModel {
     let title: String?
     let text: String?
     let creationDate: Date
-    let id: UUID
+    let id: String
     let status: Bool
 }
