@@ -8,7 +8,7 @@
 import UIKit
 
 enum ToDoListAssembly {
-    static func createToDoListListModule(with navigationController: UINavigationController) -> UIViewController {
+    static func createToDoListListModule(with navigationController: UINavigationController) -> ToDoListViewController {
         let interactor = ToDoListInteractor()
         let router = ToDoListRouter(navigationController: navigationController)
         let presenter = ToDoListPresenter(interactor: interactor, router: router)

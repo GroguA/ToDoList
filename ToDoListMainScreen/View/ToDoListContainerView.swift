@@ -37,15 +37,23 @@ final class ToDoListContainerView: UIView {
         }
         return layout
     }()
-
     
-    lazy var addTaskButton: UIImageView = {
-        let button = UIImageView()
-        button.image = UIImage(systemName: "plus")
+    lazy var addTaskButton: UIButton = {
+        let button = UIButton()
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 35, weight: .light, scale: .default)
+        let largePlus = UIImage(systemName: "plus", withConfiguration: largeConfig)
+        button.setImage(largePlus, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.isUserInteractionEnabled = true
         return button
     }()
+    
+    lazy var errorAlert: UIAlertController = {
+        let alert = UIAlertController(title: "Error", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default))
+        return alert
+    }()
+    
+    lazy var emptyTasksLabel = LabelsFactory.createLabel(with: "Create your first task", isTextBold: true)
     
     let dataSource = ToDoListMainCollectionViewDataSource()
     
@@ -67,6 +75,9 @@ private extension ToDoListContainerView {
     func setupViews() {
         backgroundColor = .systemBackground
         addSubview(taskCollectionView)
+        addSubview(emptyTasksLabel)
+        
+        emptyTasksLabel.isHidden = true
         
         setupConstraints()
     }
@@ -78,8 +89,11 @@ private extension ToDoListContainerView {
             taskCollectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             taskCollectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             
-            addTaskButton.widthAnchor.constraint(equalToConstant: 34),
-            addTaskButton.heightAnchor.constraint(equalToConstant: 34),
+//            addTaskButton.widthAnchor.constraint(equalToConstant: 34),
+//            addTaskButton.heightAnchor.constraint(equalToConstant: 34),
+            
+            emptyTasksLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            emptyTasksLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
         ]
         
         NSLayoutConstraint.activate(constraint)

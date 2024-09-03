@@ -9,9 +9,9 @@ import Foundation
 
 struct TaskModel {
     let title: String?
-    let description: String
+    let description: String?
     let creationDate: String
-    let id: Int
+    let id: String
     var status: Bool
     
     mutating func changeCompletedStatus() {

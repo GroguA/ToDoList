@@ -8,52 +8,145 @@
 import Foundation
 
 protocol IToDoListInteractor {
-    func fetchPoints(completion: @escaping (Result<[TaskModel], Error>) -> Void)
-    func deleteTask(_ index: Int)
+    func fetchTasks(completion: @escaping (Result<[TaskModel], Error>) -> Void)
+    func deleteTask(_ index: Int, completion: @escaping (Result<[TaskModel], Error>) -> Void)
+    func createEmptyTask(completion: @escaping (Result<String, Error>) -> Void)
 }
 
 final class ToDoListInteractor {
-    private let networkService = TasksNetworkService()
+    private let networkService: TasksNetworkService
+    private let storageService: TaskStorageService
+    private let launchManager: LaunchManager
+    
+    private let syncQueue = DispatchQueue(label: "taskSyncQueue", attributes: .concurrent)
+    
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        return formatter
+    }()
+    
     private var currentTasks = [TaskModel]()
+    
+    init(
+        networkService: TasksNetworkService = .shared,
+        storageService: TaskStorageService = .shared,
+        launchManager: LaunchManager = .shared
+    ) {
+        self.networkService = networkService
+        self.storageService = storageService
+        self.launchManager = launchManager
+    }
 }
 
 extension ToDoListInteractor: IToDoListInteractor {
-    func fetchPoints(completion: @escaping (Result<[TaskModel], Error>) -> Void) {
-        networkService.getDefaultTasks { [weak self] result in
+    func fetchTasks(completion: @escaping (Result<[TaskModel], Error>) -> Void) {
+        if launchManager.isFirstLaunch() {
+            fetchTasksFromNetwork(completion: completion)
+        } else {
+            fetchTasksFromStorage(completion: completion)
+        }
+    }
+    
+    func deleteTask(_ index: Int, completion: @escaping (Result<[TaskModel], Error>) -> Void) {
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let self = self else { return }
+        
+            syncQueue.async(flags: .barrier) {
+                guard index >= 0 && index < self.currentTasks.count else {
+                    self.callCompletionOnMain(.failure(StorageErrors.runtimeError("Index out of range")), completion: completion)
+                    return
+                }
+                
+                do {
+                    try self.storageService.deleteTask(id: self.currentTasks[index].id)
+                    self.currentTasks.remove(at: index)
+                    self.callCompletionOnMain(.success(self.currentTasks), completion: completion)
+                } catch {
+                    self.callCompletionOnMain(.failure(error), completion: completion)
+                }
+            }
+        }
+    }
+
+    func createEmptyTask(completion: @escaping (Result<String, Error>) -> Void) {
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let self = self else { return }
+            
+            do {
+                let taskId = try self.storageService.createTask(title: nil, text: nil)
+                syncQueue.async(flags: .barrier) {
+                    self.callCompletionOnMain(.success(taskId), completion: completion)
+                }
+            } catch {
+                self.callCompletionOnMain(.failure(error), completion: completion)
+            }
+        }
+    }
+
+}
+
+private extension ToDoListInteractor {
+    func mapTasksSchemeToTasksModel(_ tasks: [TaskScheme]) -> [TaskModel] {
+        return tasks.map { taskScheme in
+            TaskModel(
+                title: nil,
+                description: taskScheme.todo,
+                creationDate: dateFormatter.string(from: Date()),
+                id: String(taskScheme.id),
+                status: taskScheme.completed
+            )
+        }
+    }
+    
+    func mapTasksStorageToTasksModel(_ tasks: [TaskStorageModel]) -> [TaskModel] {
+        return tasks.map { taskStorage in
+            TaskModel(
+                title: taskStorage.title,
+                description: taskStorage.text,
+                creationDate: dateFormatter.string(from: Date()),
+                id: taskStorage.id,
+                status: taskStorage.status
+            )
+        }
+    }
+    
+    func callCompletionOnMain<T>(_ result: Result<T, Error>, completion: @escaping (Result<T, Error>) -> Void) {
+        DispatchQueue.main.async {
+            completion(result)
+        }
+    }
+    
+    func fetchTasksFromNetwork(completion: @escaping (Result<[TaskModel], Error>) -> Void) {
+        DispatchQueue.global(qos: .utility).async { [weak self] in
             guard let self else { return }
-            switch result {
-            case .success(let tasks):
-                let mappedTasks = self.mapTasksSchemeToMoviesModel(tasks)
-                self.currentTasks = mappedTasks
-                completion(.success(mappedTasks))
-            case .failure(let error):
-                completion(.failure(error))
+            networkService.getDefaultTasks { [weak self] result in
+                guard let self = self else { return }
+                
+                switch result {
+                case .success(let tasks):
+                    let mappedTasks = self.mapTasksSchemeToTasksModel(tasks)
+                    self.currentTasks = mappedTasks
+                    self.callCompletionOnMain(.success(mappedTasks), completion: completion)
+                case .failure(let error):
+                    self.callCompletionOnMain(.failure(error), completion: completion)
+                }
             }
         }
     }
     
-    func deleteTask(_ index: Int) {
-        currentTasks.remove(at: index)
-    }
- 
-}
-
-private extension ToDoListInteractor {
-    func mapTasksSchemeToMoviesModel(_ tasks: [TaskScheme]) -> [TaskModel] {
-        var mappedTasks = [TaskModel]()
-        let currentDate = Date()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .short
-        tasks.forEach { taskScheme in
-            let mappedTask = TaskModel(
-                title: nil,
-                description: taskScheme.todo,
-                creationDate: dateFormatter.string(from: currentDate), 
-                id: taskScheme.id,
-                status: taskScheme.completed
-            )
-            mappedTasks.append(mappedTask)
+    func fetchTasksFromStorage(completion: @escaping (Result<[TaskModel], Error>) -> Void) {
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let self = self else { return }
+            
+            do {
+                let tasks = try self.storageService.fetchTasks()
+                let mappedTasks = self.mapTasksStorageToTasksModel(tasks)
+                self.currentTasks = mappedTasks
+                self.callCompletionOnMain(.success(mappedTasks), completion: completion)
+            } catch let error {
+                self.callCompletionOnMain(.failure(error), completion: completion)
+            }
         }
-        return mappedTasks
     }
 }
