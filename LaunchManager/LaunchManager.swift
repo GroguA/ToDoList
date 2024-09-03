@@ -21,7 +21,6 @@ final class LaunchManager {
             return false
         } else {
             defaults.set(true, forKey: hasLaunchedKey)
-//            defaults.synchronize()  // Синхронизация не обязательна в современных версиях iOS
             return true
         }
     }
