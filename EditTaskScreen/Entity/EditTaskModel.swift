@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+struct EditTaskModel {
+    let title: String?
+    let text: String?
+    let id: String
+}
