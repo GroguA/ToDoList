@@ -23,12 +23,23 @@ final class TasksNetworkService {
 
 extension TasksNetworkService: ITasksNetworkService {
     func getDefaultTasks(completion: @escaping (Result<[TaskScheme], Error>) -> Void) {
-        guard let request = makeURLRequest("https://dummyjson.com/todos") else {
-            completion(.failure(NetworkErrors.invalidRequest))
-            return
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let self = self else { return }
+
+            guard let request = self.makeURLRequest("https://dummyjson.com/todos") else {
+                DispatchQueue.main.async {
+                    completion(.failure(NetworkErrors.invalidRequest))
+                }
+                return
+            }
+            self.fetchTasks(with: request) { result in
+                DispatchQueue.main.async {
+                    completion(result)
+                }
+            }
         }
-        fetchTasks(with: request, completion: completion)
     }
+
 }
 
 private extension TasksNetworkService {
