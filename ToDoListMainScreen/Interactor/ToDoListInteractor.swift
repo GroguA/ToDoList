@@ -11,6 +11,7 @@ protocol IToDoListInteractor {
     func fetchTasks(completion: @escaping (Result<[TaskModel], Error>) -> Void)
     func deleteTask(_ index: Int, completion: @escaping (Result<[TaskModel], Error>) -> Void)
     func createEmptyTask(completion: @escaping (Result<String, Error>) -> Void)
+    func changeTaskStatus(_ index: Int, completion: @escaping (Result<[TaskModel], Error>) -> Void)
 }
 
 final class ToDoListInteractor {
@@ -29,8 +30,8 @@ final class ToDoListInteractor {
     private var currentTasks = [TaskModel]()
     
     init(
-        networkService: TasksNetworkService = .shared,
-        storageService: TaskStorageService = .shared,
+        networkService: TasksNetworkService,
+        storageService: TaskStorageService,
         launchManager: LaunchManager = .shared
     ) {
         self.networkService = networkService
@@ -50,7 +51,7 @@ extension ToDoListInteractor: IToDoListInteractor {
     
     func deleteTask(_ index: Int, completion: @escaping (Result<[TaskModel], Error>) -> Void) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
         
             syncQueue.async(flags: .barrier) {
                 guard index >= 0 && index < self.currentTasks.count else {
@@ -68,10 +69,36 @@ extension ToDoListInteractor: IToDoListInteractor {
             }
         }
     }
+    
+    func changeTaskStatus(_ index: Int, completion: @escaping (Result<[TaskModel], Error>) -> Void) {
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let self = self else { return }
+            
+            syncQueue.async(flags: .barrier) {
+                do {
+                    let currentTask = self.currentTasks[index]
+                    try self.storageService.updateTaskById(currentTask.id, title: currentTask.title, text: currentTask.description, status: !currentTask.status)
+                    
+                    self.fetchTasksFromStorage { result in
+                        switch result {
+                        case .success(let tasks):
+                            self.currentTasks = tasks
+                            self.callCompletionOnMain(.success(tasks), completion: completion)
+                        case .failure(let error):
+                            self.callCompletionOnMain(.failure(error), completion: completion)
+                        }
+                    }
+                } catch {
+                    self.callCompletionOnMain(.failure(error), completion: completion)
+                }
+            }
+        }
+    }
+
 
     func createEmptyTask(completion: @escaping (Result<String, Error>) -> Void) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             
             do {
                 let taskId = try self.storageService.createTask(title: nil, text: nil)

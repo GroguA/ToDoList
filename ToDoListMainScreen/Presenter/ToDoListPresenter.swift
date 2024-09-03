@@ -12,6 +12,7 @@ protocol IToDoListPresenter {
     func taskDeleted(_ index: Int)
     func taskClicked(at index: Int)
     func createTaskClicked()
+    func taskStatusChanged(_ index: Int, completion: @escaping ([TaskModel]) -> Void)
 }
 
 final class ToDoListPresenter {
@@ -57,6 +58,19 @@ extension ToDoListPresenter: IToDoListPresenter {
             }
         }
     }
+    
+    func taskStatusChanged(_ index: Int, completion: @escaping ([TaskModel]) -> Void) {
+        interactor.changeTaskStatus(index) { [weak self] result in
+            switch result {
+            case .success(let tasks):
+                self?.tasks = tasks
+                completion(tasks)
+            case .failure(let failure):
+                self?.ui?.showError(failure.localizedDescription)
+            }
+        }
+    }
+
     
     func taskClicked(at index: Int) {
         router.showEditTaskScreen(tasks[index].id)
