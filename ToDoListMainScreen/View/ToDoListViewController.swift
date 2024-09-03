@@ -9,6 +9,8 @@ import UIKit
 
 protocol IToDoListController: AnyObject {
     func showTasks(_ tasks: [TaskModel])
+    func showError(_ error: String)
+    func showEmptyTasks()
 }
 
 final class ToDoListViewController: UIViewController {
@@ -29,9 +31,12 @@ final class ToDoListViewController: UIViewController {
         view = containerView
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        presenter.didLoad(ui: self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.didLoad(ui: self)
         setupViews()
         
         containerView.deleteActionClosure = { [weak self] index in
@@ -45,16 +50,28 @@ final class ToDoListViewController: UIViewController {
 
 extension ToDoListViewController: IToDoListController {
     func showTasks(_ tasks: [TaskModel]) {
-        callResultOnMain { [weak self] in
-            self?.containerView.taskCollectionView.isHidden = false
-            self?.containerView.dataSource.setTasks(tasks)
-            self?.containerView.taskCollectionView.reloadData()
-        }
+        containerView.taskCollectionView.isHidden = false
+        containerView.dataSource.setTasks(tasks)
+        containerView.emptyTasksLabel.isHidden = true
+        containerView.taskCollectionView.reloadData()
+    }
+    
+    func showError(_ error: String) {
+        containerView.taskCollectionView.isHidden = true
+        containerView.errorAlert.message = error
+        present(containerView.errorAlert, animated: true)
+    }
+    
+    func showEmptyTasks() {
+        containerView.emptyTasksLabel.isHidden = false
+        containerView.taskCollectionView.isHidden = true
     }
 }
 
 extension ToDoListViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        presenter.taskClicked(at: indexPath.row)
+    }
 }
 
 private extension ToDoListViewController {
@@ -62,11 +79,12 @@ private extension ToDoListViewController {
         view.backgroundColor = .systemBackground
         navigationItem.title = "ToDo List"
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: containerView.addTaskButton)
+        
+        containerView.addTaskButton.addTarget(self, action: #selector(onCreateTaskTapped), for: .touchUpInside)
     }
     
-    func callResultOnMain(result: @escaping () -> Void) {
-        DispatchQueue.main.async {
-            result()
-        }
+    @objc func onCreateTaskTapped() {
+        presenter.createTaskClicked()
+        containerView.taskCollectionView.reloadData()
     }
 }
