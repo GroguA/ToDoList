@@ -15,6 +15,15 @@ class ToDoListCollectionViewCell: UICollectionViewCell {
     private lazy var taskCreationDateLabel = LabelsFactory.createLabel(textSize: 18)
     private lazy var taskStatusLabel = LabelsFactory.createLabel(textSize: 18)
     
+    private lazy var taskStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [taskTitleLabel, taskTextLabel, taskCreationDateLabel, taskStatusLabel])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.distribution = .equalSpacing
+        stack.spacing = 8
+        return stack
+    }()
+    
     private let offsetForConstraints: CGFloat = 16
     
     override init(frame: CGRect) {
@@ -28,45 +37,37 @@ class ToDoListCollectionViewCell: UICollectionViewCell {
     }
     
     func setupViews() {
-        contentView.addSubview(taskTitleLabel)
-        contentView.addSubview(taskTextLabel)
-        contentView.addSubview(taskCreationDateLabel)
-        contentView.addSubview(taskStatusLabel)
+        contentView.addSubview(taskStackView)
+        
+        contentView.backgroundColor = .systemBackground
         
         setupConstraints()
     }
     
     func fillCellWith(_ task: TaskModel) {
-        taskTextLabel.text = task.description
         taskStatusLabel.text = task.status ? "Completed" : "Not completed"
         taskCreationDateLabel.text = task.creationDate
-        guard let title = task.title else {
+        if let title = task.title, !title.isEmpty {
+            taskTitleLabel.text = title
+        } else {
             taskTitleLabel.text = "Title"
-            return
         }
-        taskTitleLabel.text = title
+        
+        if let text = task.description, !text.isEmpty {
+            taskTextLabel.text = text
+        } else {
+            taskTextLabel.text = "No additional info"
+        }
     }
 }
 
 private extension ToDoListCollectionViewCell {
     func setupConstraints() {
         let constraints = [
-            taskTitleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            taskTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: offsetForConstraints),
-            taskTitleLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -offsetForConstraints),
-            
-            taskTextLabel.topAnchor.constraint(equalTo: taskTitleLabel.bottomAnchor, constant: 8),
-            taskTextLabel.leadingAnchor.constraint(equalTo: taskTitleLabel.leadingAnchor),
-            taskTextLabel.trailingAnchor.constraint(equalTo: taskTitleLabel.trailingAnchor),
-            
-            taskCreationDateLabel.topAnchor.constraint(equalTo: taskTextLabel.bottomAnchor, constant: 8),
-            taskCreationDateLabel.leadingAnchor.constraint(equalTo: taskTitleLabel.leadingAnchor),
-            taskCreationDateLabel.trailingAnchor.constraint(equalTo: taskTitleLabel.trailingAnchor),
-            
-            taskStatusLabel.topAnchor.constraint(equalTo: taskCreationDateLabel.bottomAnchor, constant: 8),
-            taskStatusLabel.leadingAnchor.constraint(equalTo: taskTitleLabel.leadingAnchor),
-            taskStatusLabel.trailingAnchor.constraint(equalTo: taskTitleLabel.trailingAnchor),
-            taskStatusLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
+            taskStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            taskStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: offsetForConstraints),
+            taskStackView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -offsetForConstraints),
+            taskStackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
             
         ]
         

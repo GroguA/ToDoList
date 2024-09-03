@@ -51,7 +51,17 @@ private extension EditTaskViewController {
 extension EditTaskViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text as? NSString
+        
         guard let updatedText = currentText?.replacingCharacters(in: range, with: string) else {
+            return false
+        }
+        
+        if updatedText.isEmpty {
+            presenter.taskChanged(title: updatedText, text: containerView.taskTextTextView.text)
+            return true
+        }
+        
+        if updatedText.trimmingCharacters(in: .whitespaces).isEmpty {
             return false
         }
         
@@ -63,8 +73,20 @@ extension EditTaskViewController: UITextFieldDelegate {
 
 extension EditTaskViewController: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let currentText = textView.text as NSString
-        let updatedText = currentText.replacingCharacters(in: range, with: text)
+        let currentText = textView.text as? NSString
+        
+        guard let updatedText = currentText?.replacingCharacters(in: range, with: text) else {
+            return false
+        }
+                
+        if updatedText.isEmpty {
+            presenter.taskChanged(title: containerView.taskTitleTextField.text, text: updatedText)
+            return true
+        }
+        
+        if updatedText.trimmingCharacters(in: .whitespaces).isEmpty {
+            return false
+        }
         
         presenter.taskChanged(title: containerView.taskTitleTextField.text, text: updatedText)
         

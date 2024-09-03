@@ -40,11 +40,21 @@ final class ToDoListViewController: UIViewController {
         setupViews()
         
         containerView.deleteActionClosure = { [weak self] index in
-            self?.presenter.taskDeleted(index.row)
-            self?.containerView.taskCollectionView.performBatchUpdates({
-                self?.containerView.taskCollectionView.deleteItems(at: [index])
+            guard let self = self else { return }
+            self.presenter.taskDeleted(index.row)
+            self.containerView.taskCollectionView.performBatchUpdates({
+                self.containerView.taskCollectionView.deleteItems(at: [index])
             }, completion: nil)
         }
+        
+        containerView.completeActionClosure = { [weak self] index in
+            guard let self = self else { return }
+            self.presenter.taskStatusChanged(index.row) { tasks in
+                self.containerView.dataSource.setTasks(tasks)
+                self.containerView.taskCollectionView.reloadData()
+            }
+        }
+        
     }
 }
 

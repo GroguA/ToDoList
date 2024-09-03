@@ -11,6 +11,8 @@ protocol IToDoListInteractor {
     func fetchTasks(completion: @escaping (Result<[TaskModel], Error>) -> Void)
     func deleteTask(_ index: Int, completion: @escaping (Result<[TaskModel], Error>) -> Void)
     func createEmptyTask(completion: @escaping (Result<String, Error>) -> Void)
+    func changeTaskStatus(_ index: Int, completion: @escaping (Result<[TaskModel], Error>) -> Void)
+    func taskClicked(completion: (Bool) -> Void)
 }
 
 final class ToDoListInteractor {
@@ -28,9 +30,11 @@ final class ToDoListInteractor {
     
     private var currentTasks = [TaskModel]()
     
+    var userTaskCreated = false
+    
     init(
-        networkService: TasksNetworkService = .shared,
-        storageService: TaskStorageService = .shared,
+        networkService: TasksNetworkService,
+        storageService: TaskStorageService,
         launchManager: LaunchManager = .shared
     ) {
         self.networkService = networkService
@@ -49,9 +53,14 @@ extension ToDoListInteractor: IToDoListInteractor {
     }
     
     func deleteTask(_ index: Int, completion: @escaping (Result<[TaskModel], Error>) -> Void) {
-        DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let self = self else { return }
+        if !userTaskCreated {
+            self.currentTasks.remove(at: index)
+            return
+        }
         
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let self else { return }
+            
             syncQueue.async(flags: .barrier) {
                 guard index >= 0 && index < self.currentTasks.count else {
                     self.callCompletionOnMain(.failure(StorageErrors.runtimeError("Index out of range")), completion: completion)
@@ -68,22 +77,57 @@ extension ToDoListInteractor: IToDoListInteractor {
             }
         }
     }
-
-    func createEmptyTask(completion: @escaping (Result<String, Error>) -> Void) {
+    
+    func changeTaskStatus(_ index: Int, completion: @escaping (Result<[TaskModel], Error>) -> Void) {
+        if !userTaskCreated {
+            currentTasks[index].changeCompletedStatus()
+            let updatedTask = self.currentTasks.remove(at: index)
+            self.currentTasks.insert(updatedTask, at: 0)
+            completion(.success(currentTasks))
+            return
+        }
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard let self = self else { return }
             
+            syncQueue.async(flags: .barrier) {
+                do {
+                    let currentTask = self.currentTasks[index]
+                    try self.storageService.updateTaskById(currentTask.id, title: currentTask.title, text: currentTask.description, status: !currentTask.status)
+                    
+                    self.fetchTasksFromStorage { result in
+                        switch result {
+                        case .success(let tasks):
+                            self.currentTasks = tasks
+                            self.callCompletionOnMain(.success(tasks), completion: completion)
+                        case .failure(let error):
+                            self.callCompletionOnMain(.failure(error), completion: completion)
+                        }
+                    }
+                } catch {
+                    self.callCompletionOnMain(.failure(error), completion: completion)
+                }
+            }
+        }
+    }
+    
+    func createEmptyTask(completion: @escaping (Result<String, Error>) -> Void) {
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let self else { return }
+            
             do {
                 let taskId = try self.storageService.createTask(title: nil, text: nil)
-                syncQueue.async(flags: .barrier) {
+                self.userTaskCreated = true
                     self.callCompletionOnMain(.success(taskId), completion: completion)
-                }
             } catch {
                 self.callCompletionOnMain(.failure(error), completion: completion)
             }
         }
     }
-
+    
+    func taskClicked(completion: (Bool) -> Void) {
+        completion(userTaskCreated)
+    }
+    
 }
 
 private extension ToDoListInteractor {

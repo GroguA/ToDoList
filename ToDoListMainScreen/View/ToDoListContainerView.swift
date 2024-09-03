@@ -31,6 +31,19 @@ final class ToDoListContainerView: UIView {
                 }
                 return UISwipeActionsConfiguration(actions: [deleteAction])
             }
+            
+            config.leadingSwipeActionsConfigurationProvider = { indexPath in
+                let title = self.dataSource.tasks[indexPath.row].status ? "Undo" : "Complete"
+                let completeAction = UIContextualAction(style: .normal, title: title) { [weak self] action, view, completion in
+                    guard let self = self else { return }
+                    self.dataSource.tasks[indexPath.row].changeCompletedStatus()
+                    completeActionClosure?(indexPath)
+                    completion(true)
+                }
+                completeAction.backgroundColor = .systemGray
+                
+                return UISwipeActionsConfiguration(actions: [completeAction])
+            }
 
             let layoutSection = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
             return layoutSection
@@ -40,8 +53,8 @@ final class ToDoListContainerView: UIView {
     
     lazy var addTaskButton: UIButton = {
         let button = UIButton()
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 35, weight: .light, scale: .default)
-        let largePlus = UIImage(systemName: "plus", withConfiguration: largeConfig)
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 32, weight: .light, scale: .default)
+        let largePlus = UIImage(systemName: "plus.app.fill", withConfiguration: largeConfig)
         button.setImage(largePlus, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -58,6 +71,7 @@ final class ToDoListContainerView: UIView {
     let dataSource = ToDoListMainCollectionViewDataSource()
     
     var deleteActionClosure: ((IndexPath) -> Void)?
+    var completeActionClosure: ((IndexPath) -> Void)?
     
     init(delegate: UICollectionViewDelegate) {
         super.init(frame: .zero)
@@ -88,9 +102,6 @@ private extension ToDoListContainerView {
             taskCollectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             taskCollectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             taskCollectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            
-//            addTaskButton.widthAnchor.constraint(equalToConstant: 34),
-//            addTaskButton.heightAnchor.constraint(equalToConstant: 34),
             
             emptyTasksLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             emptyTasksLabel.centerYAnchor.constraint(equalTo: centerYAnchor),

@@ -12,15 +12,13 @@ protocol ITaskStorageService {
     func fetchTasks() throws -> [TaskStorageModel]
     func createTask(title: String?, text: String?) throws -> String
     func getTaskById(_ id: String) throws -> TaskStorageModel?
-    func updateTaskById(_ id: String, title: String?, text: String?) throws
+    func updateTaskById(_ id: String, title: String?, text: String?, status: Bool?) throws
 }
 
-final class TaskStorageService {
-    static let shared = TaskStorageService()
-    
+final class TaskStorageService {    
     private let persistentContainer: NSPersistentContainer
     
-    private init(persistentContainer: NSPersistentContainer = (UIApplication.shared.delegate as! AppDelegate).persistentContainer) {
+    init(persistentContainer: NSPersistentContainer = (UIApplication.shared.delegate as! AppDelegate).persistentContainer) {
         self.persistentContainer = persistentContainer
     }
     
@@ -89,7 +87,7 @@ extension TaskStorageService: ITaskStorageService {
         )
     }
     
-    func updateTaskById(_ id: String, title: String?, text: String?) throws {
+    func updateTaskById(_ id: String, title: String?, text: String?, status: Bool?) throws {
         let taskManagedObj = try getManagedObjectById(id)
         
         guard let title, let text else { return }
@@ -101,6 +99,12 @@ extension TaskStorageService: ITaskStorageService {
         taskManagedObj.setValue(title, forKey: "title")
         taskManagedObj.setValue(text, forKey: "text")
         taskManagedObj.setValue(Date(), forKey: "creationDate")
+
+        guard let status else {
+            return
+        }
+
+        taskManagedObj.setValue(status, forKey: "status")
         
         try saveContext()
     }
