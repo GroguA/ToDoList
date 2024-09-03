@@ -12,6 +12,10 @@ protocol ITasksNetworkService {
 }
 
 final class TasksNetworkService {
+    static let shared = TasksNetworkService()
+    
+    private init() {}
+    
     private let session = URLSession.shared
     private let mapper = JsonDecoderWrapper()
     
