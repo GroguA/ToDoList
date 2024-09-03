@@ -1,5 +1,5 @@
 //
-//  PointsNetworkService.swift
+//  TasksNetworkService.swift
 //  ToDoList
 //
 //  Created by Александра Сергеева on 30.08.2024.
@@ -12,6 +12,10 @@ protocol ITasksNetworkService {
 }
 
 final class TasksNetworkService {
+    static let shared = TasksNetworkService()
+    
+    private init() {}
+    
     private let session = URLSession.shared
     private let mapper = JsonDecoderWrapper()
     
@@ -19,12 +23,23 @@ final class TasksNetworkService {
 
 extension TasksNetworkService: ITasksNetworkService {
     func getDefaultTasks(completion: @escaping (Result<[TaskScheme], Error>) -> Void) {
-        guard let request = makeURLRequest("https://dummyjson.com/todos") else {
-            completion(.failure(NetworkErrors.invalidRequest))
-            return
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let self = self else { return }
+
+            guard let request = self.makeURLRequest("https://dummyjson.com/todos") else {
+                DispatchQueue.main.async {
+                    completion(.failure(NetworkErrors.invalidRequest))
+                }
+                return
+            }
+            self.fetchTasks(with: request) { result in
+                DispatchQueue.main.async {
+                    completion(result)
+                }
+            }
         }
-        fetchTasks(with: request, completion: completion)
     }
+
 }
 
 private extension TasksNetworkService {

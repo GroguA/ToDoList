@@ -10,6 +10,8 @@ import Foundation
 protocol IToDoListPresenter {
     func didLoad(ui: IToDoListController)
     func taskDeleted(_ index: Int)
+    func taskClicked(at index: Int)
+    func createTaskClicked()
 }
 
 final class ToDoListPresenter {
@@ -28,19 +30,47 @@ final class ToDoListPresenter {
 extension ToDoListPresenter: IToDoListPresenter {
     func didLoad(ui: IToDoListController) {
         self.ui = ui
-        interactor.fetchPoints { [weak self] result in
+        interactor.fetchTasks { [weak self] result in
             switch result {
             case .success(let tasks):
                 self?.tasks = tasks
-                self?.ui?.showTasks(tasks)
-            case .failure(_): break
-                
+                if tasks.isEmpty {
+                    self?.ui?.showEmptyTasks()
+                } else {
+                    self?.ui?.showTasks(tasks)
+                }
+            case .failure(let error):
+                self?.ui?.showError(error.localizedDescription)
             }
         }
     }
     
     func taskDeleted(_ index: Int) {
-        interactor.deleteTask(index)
+        interactor.deleteTask(index) { [weak self] result in
+            switch result {
+            case .success(let tasks):
+                if tasks.isEmpty {
+                    self?.ui?.showEmptyTasks()
+                }
+            case .failure(let failure):
+                self?.ui?.showError(failure.localizedDescription)
+            }
+        }
+    }
+    
+    func taskClicked(at index: Int) {
+        router.showEditTaskScreen(tasks[index].id)
+    }
+    
+    func createTaskClicked() {
+        interactor.createEmptyTask { [weak self] result in
+            switch result {
+            case .success(let taskId):
+                self?.router.showEditTaskScreen(taskId)
+            case .failure(let failure):
+                self?.ui?.showError(failure.localizedDescription)
+            }
+        }
     }
 }
 
