@@ -10,10 +10,10 @@ import UIKit
 class ToDoListCollectionViewCell: UICollectionViewCell {
     static let identifier = String(describing: ToDoListCollectionViewCell.self)
     
-    private lazy var taskTitleLabel = LabelsFactory.createLabel(isTextBold: true)
-    private lazy var taskTextLabel = LabelsFactory.createLabel(textSize: 18)
-    private lazy var taskCreationDateLabel = LabelsFactory.createLabel(textSize: 18)
-    private lazy var taskStatusLabel = LabelsFactory.createLabel(textSize: 18)
+    private lazy var taskTitleLabel = LabelsFactory.createLabel(isTextBold: true, textSize: 19)
+    private lazy var taskTextLabel = LabelsFactory.createLabel()
+    private lazy var taskCreationDateLabel = LabelsFactory.createLabel()
+    private lazy var taskStatusLabel = LabelsFactory.createLabel()
     
     private lazy var taskStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [taskTitleLabel, taskTextLabel, taskCreationDateLabel, taskStatusLabel])

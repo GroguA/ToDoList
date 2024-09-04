@@ -8,7 +8,7 @@
 import UIKit
 
 struct LabelsFactory {
-    static func createLabel(with text: String? = nil, isTextBold: Bool = false, textSize: CGFloat = 19) -> UILabel {
+    static func createLabel(with text: String? = nil, isTextBold: Bool = false, textSize: CGFloat = 18) -> UILabel {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: textSize, weight: isTextBold ? .semibold : .regular)

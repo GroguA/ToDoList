@@ -72,6 +72,7 @@
 		7CE854E52C858402007B3FC0 /* EditTaskAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTaskAssembly.swift; sourceTree = "<group>"; };
 		7CE854E72C85865A007B3FC0 /* EditTaskModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTaskModel.swift; sourceTree = "<group>"; };
 		7CE854EB2C85A7FF007B3FC0 /* LaunchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchManager.swift; sourceTree = "<group>"; };
+		7CE854F12C884BB4007B3FC0 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,11 +89,12 @@
 		7CE8547A2C808E6F007B3FC0 = {
 			isa = PBXGroup;
 			children = (
+				7CE854F12C884BB4007B3FC0 /* README.md */,
+				7CE8549D2C809003007B3FC0 /* .gitignore */,
 				7CE854F02C85A963007B3FC0 /* Services */,
 				7CE854EA2C85A7E9007B3FC0 /* LaunchManager */,
 				7CE854CB2C81DEF7007B3FC0 /* EditTaskScreen */,
 				7CE854A92C8094A3007B3FC0 /* Factories */,
-				7CE8549D2C809003007B3FC0 /* .gitignore */,
 				7CE854852C808E6F007B3FC0 /* ToDoList */,
 				7CE8549F2C809245007B3FC0 /* ToDoListMainScreen */,
 				7CE854842C808E6F007B3FC0 /* Products */,
